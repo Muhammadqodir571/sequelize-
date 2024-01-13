@@ -6,16 +6,23 @@ const {
     getUpdateDiaryPage,
     postUpdateDiary,
     postDeleteDiary,
-    postAddCommentDiary
+    postAddCommentDiary,
+    getAlldiary
 } = require('../controllers/diary.control')
 const router = Router()
-router.get('/my',getMdiary )
-router.post('/add',addNewdiary)
-router.get('/:id',getMdiaryById)
-router.get('/update/:id',getUpdateDiaryPage)
-router.post('/update/:id',postUpdateDiary)
-router.post('/delete/:id',postDeleteDiary)
-router.post('/comment/:id',postAddCommentDiary)
+const {proctped} = require('../middlewares/auth')
+const {body} = require('express-validator')
+const upload = require('../utils/fileUpload')
+router.get('/my',proctped,getMdiary )
+router.get('/all',proctped,getAlldiary )
+router.post('/add',upload.single('imageUrl'),
+    body('text','Please add at least 3 charactaries your at diary').isLength({min:3}),
+    proctped,addNewdiary)
+router.get('/:id',proctped,getMdiaryById)
+router.get('/update/:id',proctped,getUpdateDiaryPage)
+router.post('/update/:id',proctped,postUpdateDiary)
+router.post('/delete/:id',proctped,postDeleteDiary)
+router.post('/comment/:id',proctped,postAddCommentDiary)
 
 
 
